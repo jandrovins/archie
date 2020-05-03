@@ -7,6 +7,8 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import FileManager, Archiver
+
 
 class Ui_Archie(object):
     def setupUi(self, Archie):
@@ -70,12 +72,8 @@ class Ui_Archie(object):
         self.saved_pages_table.setRowCount(0)
         self.saved_pages_table.horizontalHeader().setCascadingSectionResizes(False)
         self.saved_pages_table.setHorizontalHeaderLabels(
-                ['Nombre',
-                'Ruta',
-                'Tamaño (MiB)',
-                'Creación',
-                'Tipo']
-                )
+            ["Nombre", "Ruta", "Tamaño (MiB)", "Creación", "Tipo"]
+        )
         self.verticalLayout_4.addWidget(self.saved_pages_table)
         Archie.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(Archie)
@@ -94,26 +92,66 @@ class Ui_Archie(object):
         Archie.setTabOrder(self.line_edit_topic, self.combo_box_topic)
         Archie.setTabOrder(self.combo_box_topic, self.push_button_topic)
 
-        self.push_button_url.clicked.connect(self.actualizar)    
+        self.push_button_url.clicked.connect(self.archive_by_url)
+        self.push_button_topic.clicked.connect(self.archive_by_topic)
+        self.archiver = Archiver()
+        self.populate_table()
 
+    def populate_table(self):
+        FileManager.parse_csv()
+        row_number = 0
+        actual_row_number = self.saved_pages_table.rowCount()
+        for webpage in FileManager.webpages:
+            if row_number >= actual_row_number:
+                self.saved_pages_table.insertRow(row_number)
 
-    def actualizar(self):
+            name = webpage.name
+            abs_path = str(webpage.path)
+            size = str(webpage.size)
+            creation_date_str = webpage.date.strftime("%Y-%m-%d")
+            page_type = webpage.type
+
+            self.saved_pages_table.setItem(
+                row_number, 0, QtWidgets.QTableWidgetItem(name)
+            )
+            self.saved_pages_table.setItem(
+                row_number, 1, QtWidgets.QTableWidgetItem(abs_path)
+            )
+            self.saved_pages_table.setItem(
+                row_number, 2, QtWidgets.QTableWidgetItem(size)
+            )
+            self.saved_pages_table.setItem(
+                row_number, 3, QtWidgets.QTableWidgetItem(creation_date_str)
+            )
+            self.saved_pages_table.setItem(
+                row_number, 4, QtWidgets.QTableWidgetItem(page_type)
+            )
+
+            row_number += 1
+
+    def archive_by_url(self):
+        # Tomar URL ingresada por el usuario
         url = self.line_edit_url.text()
-        self.label_url.setText(url)
-        row_number = self.saved_pages_table.rowCount();
-        self.saved_pages_table.insertRow(row_number)
-        self.saved_pages_table.setItem(row_number, 0, QtWidgets.QTableWidgetItem(url[0]))
-        self.saved_pages_table.setItem(row_number, 1, QtWidgets.QTableWidgetItem(url[1]))
-        self.saved_pages_table.setItem(row_number, 2, QtWidgets.QTableWidgetItem(url[2]))
-        self.saved_pages_table.setItem(row_number, 3, QtWidgets.QTableWidgetItem(url[3]))
-        self.saved_pages_table.setItem(row_number, 4, QtWidgets.QTableWidgetItem(url[4]))
+        # CAMBIAR!! Debemos crear una función en Archiver que reciba como parámetro el tipo de descarga que se quiere hacer, y que esta llame a self.archiver.download_html o a self.archiver.download_pdf
+        download_type = self.combo_box_url.currentText()
+        if download_type == 'HTML':
+            new_webpage = self.archiver.download_html(url)
+        else:
+            new_webpage = self.archiver.download_pdf(url)
+        FileManager.add_webpage(new_webpage)
+        self.populate_table():
 
-
-
-        
+    def archive_by_topic(self):
+        # Tomar URL ingresada por el usuario
+        topic = self.line_edit_topic.text()
+        download_type = self.combo_box_topic.currentText()
+        new_webpage = self.archiver.search_by_topic(topic, download_type)
+        FileManager.add_webpage(new_webpage)
+        self.populate_table():
 
     def retranslateUi(self, Archie):
         _translate = QtCore.QCoreApplication.translate
+
         Archie.setWindowTitle(_translate("Archie", "MainWindow"))
         self.push_button_url.setText(_translate("Archie", "Buscar"))
         self.combo_box_url.setCurrentText(_translate("Archie", "HTML"))
@@ -130,10 +168,10 @@ class Ui_Archie(object):
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     Archie = QtWidgets.QMainWindow()
     ui = Ui_Archie()
     ui.setupUi(Archie)
     Archie.show()
     sys.exit(app.exec_())
-
