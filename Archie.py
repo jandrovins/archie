@@ -19,11 +19,20 @@ class Archie:
         elif type == 'PDF':
             self.download_pdf(url)
 
-    def uncompress_warc(self, path, name):
+    def uncompress_warc(self, path):
         home = Path.home()
-        page_name = name + "/"
+        page_name = str(path.name)[:-8]
         destination = home / Path("Documents/Archie/HTML/") / Path(page_name)
         uncompress_warc = subprocess.Popen(['python', '-m', 'warcat', 'extract', str(path), '--output-dir', str(destination), '--progress' ])
         uncompress_warc.wait()
         uncompress_warc.poll()
         
+
+
+def main():
+    b = Archie()
+    b.uncompress_warc(Path('/home/clopezr/Documents/2020-1/Ing.Software/archie/warcat.warc.gz'))
+
+
+if __name__ == '__main__':
+    main()
