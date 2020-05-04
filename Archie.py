@@ -26,13 +26,4 @@ class Archie:
         uncompress_warc = subprocess.Popen(['python', '-m', 'warcat', 'extract', str(path), '--output-dir', str(destination), '--progress' ])
         uncompress_warc.wait()
         uncompress_warc.poll()
-        
-
-
-def main():
-    b = Archie()
-    b.uncompress_warc(Path('/home/clopezr/Documents/2020-1/Ing.Software/archie/warcat.warc.gz'))
-
-
-if __name__ == '__main__':
-    main()
+        return destination
