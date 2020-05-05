@@ -53,8 +53,8 @@ class FileManager:
     @classmethod
     def list_web_pages(cls):
         return cls.webpages
-    
+
     @classmethod
     def compress(cls, webpage):
-        zip_file = (Path.home() / 'Downloads' / webpage.name).__str__()
-        make_archive(zip_file, 'zip', webpage.path)
+        zip_file = (Path.home() / "Downloads" / webpage.name).__str__()
+        make_archive(zip_file, "zip", webpage.path)

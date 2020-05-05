@@ -9,6 +9,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import FileManager, Archiver
 
+
 class Ui_Archie(object):
     def setupUi(self, Archie):
         Archie.setObjectName("Archie")
@@ -194,7 +195,7 @@ class Ui_Archie(object):
         name = self.line_edit_url_result_name.text()
         download_type = self.combo_box_url.currentText()
         # CAMBIAR!! Debemos crear una función en Archiver que reciba como parámetro el tipo de descarga que se quiere hacer, y que esta llame a self.archiver.download_html o a self.archiver.download_pdf
-        if download_type == 'HTML':
+        if download_type == "HTML":
             new_webpage = self.archiver.download_html(url, name)
         else:
             new_webpage = self.archiver.download_pdf(url, name)
@@ -228,10 +229,10 @@ class Ui_Archie(object):
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     Archie = QtWidgets.QMainWindow()
     ui = Ui_Archie()
     ui.setupUi(Archie)
     Archie.show()
     sys.exit(app.exec_())
-
