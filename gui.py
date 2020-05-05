@@ -212,10 +212,8 @@ class Ui_Archie(object):
         self.populate_table()
 
     def compress(self):
-        # Tomar URL ingresada por el usuario
-        webpage_name = self.line_edit_compress.text()
-        name = self.line_edit_topic_result_name.text()
-
+        name = self.line_edit_compress.text()
+        webpage = None
         for wp in FileManager.webpages:
             if wp.name == name:
                 webpage = wp

@@ -61,5 +61,5 @@ class FileManager:
 
     @classmethod
     def compress(cls, webpage):
-        zip_file = (Path.home() / "Downloads" / webpage.name).__str__()
+        zip_file = str(Path.home() / "Downloads" / webpage.name)
         make_archive(zip_file, "zip", webpage.path)
