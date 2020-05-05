@@ -7,7 +7,10 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-import FileManager, Archiver
+from WgetWrapper import WgetWrapper
+from FileManager import FileManager
+from Archiver import Archiver
+from WebPage import WebPage
 
 
 class Ui_Archie(object):
@@ -134,6 +137,7 @@ class Ui_Archie(object):
         self.push_button_topic.clicked.connect(self.archive_by_topic)
         self.push_button_compress.clicked.connect(self.compress)
         self.archiver = Archiver()
+        FileManager.parse_csv()
         self.populate_table()
 
     def retranslateUi(self, Archie):
@@ -158,7 +162,6 @@ class Ui_Archie(object):
         self.push_button_compress.setText(_translate("Archie", "Compress"))
 
     def populate_table(self):
-        FileManager.parse_csv()
         row_number = 0
         actual_row_number = self.saved_pages_table.rowCount()
         for webpage in FileManager.webpages:
@@ -168,7 +171,7 @@ class Ui_Archie(object):
             name = webpage.name
             abs_path = str(webpage.path)
             size = str(webpage.size)
-            creation_date_str = webpage.date.strftime("%Y-%m-%d")
+            creation_date_str = webpage.creation_date.strftime("%Y-%m-%d")
             page_type = webpage.type
 
             self.saved_pages_table.setItem(
@@ -194,11 +197,8 @@ class Ui_Archie(object):
         url = self.line_edit_url.text()
         name = self.line_edit_url_result_name.text()
         download_type = self.combo_box_url.currentText()
-        # CAMBIAR!! Debemos crear una función en Archiver que reciba como parámetro el tipo de descarga que se quiere hacer, y que esta llame a self.archiver.download_html o a self.archiver.download_pdf
-        if download_type == "HTML":
-            new_webpage = self.archiver.download_html(url, name)
-        else:
-            new_webpage = self.archiver.download_pdf(url, name)
+        new_webpage = self.archiver.search_by_url(url, download_type, name)
+        print(type(new_webpage))
         FileManager.add_webpage(new_webpage)
         self.populate_table()
 
@@ -207,7 +207,7 @@ class Ui_Archie(object):
         topic = self.line_edit_topic.text()
         name = self.line_edit_topic_result_name.text()
         download_type = self.combo_box_topic.currentText()
-        new_webpage = self.archiver.search_by_topic(topic, name, download_type)
+        new_webpage = self.archiver.search_by_topic(topic, download_type, name)
         FileManager.add_webpage(new_webpage)
         self.populate_table()
 

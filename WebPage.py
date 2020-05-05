@@ -30,4 +30,3 @@ class WebPageHTML(WebPage):
         self.size = size
         self.path = path
         self.type = 'HTML'
-    

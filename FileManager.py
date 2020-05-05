@@ -1,7 +1,7 @@
 from pathlib import Path
 from shutil import make_archive
 from datetime import date
-import WebPage
+from WebPage import WebPageHTML, WebPagePDF
 
 
 class FileManager:
@@ -19,15 +19,15 @@ class FileManager:
         name = webpage.name
         abs_path = str(webpage.path)
         size = str(webpage.size)
-        creation_date_str = webpage.date.strftime("%Y-%m-%d")
+        creation_date_str = webpage.creation_date.strftime("%Y-%m-%d")
         page_type = webpage.type
         line = f"{name},{abs_path},{size},{creation_date_str},{page_type}\n"
-        with csv_path.open("w") as csv:
+        with cls.csv_path.open("a") as csv:
             csv.write(line)
 
     @classmethod
     def parse_csv(cls):
-        with cls.csv_path.open() as csv:
+        with cls.csv_path.open('r') as csv:
             # Iterate all lines, except header
             for line in csv.readlines()[1:]:
                 # Remove trailing EOL and spaces
@@ -39,16 +39,21 @@ class FileManager:
                 abs_path = Path(values[1])
                 size = float(values[2])
                 creation_date_obj_list = values[3].split("-")
-                year = creation_date_obj_list[0]
-                month = creation_date_obj_list[1]
-                day = creation_date_obj_list[2]
+                year = int(creation_date_obj_list[0])
+                month = int(creation_date_obj_list[1])
+                day = int(creation_date_obj_list[2])
                 creation_date = date(year, month, day)
                 page_type = values[4]
 
                 # Create WebPage and add it to FileManager web pages list
-                cls.webpages.append(
-                    WebPage(name, abs_path, size, creation_date, page_type)
-                )
+                if page_type == 'HTML':
+                    cls.webpages.append(
+                        WebPageHTML(name, creation_date, size, abs_path)
+                    )
+                else:
+                    cls.webpages.append(
+                        WebPagePDF(name, creation_date, size, abs_path)
+                    )
 
     @classmethod
     def list_web_pages(cls):

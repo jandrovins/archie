@@ -10,6 +10,6 @@ class WgetWrapper:
     #download_warc method downloads the compressed warc file and then moves it to the defined directory
     @staticmethod
     def download_warc(warc_file, prefix, url):
-        subprocess.run(['wget', url, '--warc-file=%s'% warc_file, '-P%s'% prefix])
-        subprocess.run(['mv', '%s.warc.gz'% warc_file, prefix])
+        subprocess.run(['wget', url, '--warc-file=%s'% warc_file, '-P%s'% str(prefix)])
+        subprocess.run(['mv', '%s.warc.gz'% warc_file, str(prefix)])
 
