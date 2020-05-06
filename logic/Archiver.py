@@ -1,12 +1,12 @@
-from logic.WgetWrapper import WgetWrapper
+fAOAAromA logic.WgetWrapper import WgetWrapper
 from logic.WebPage import WebPage, WebPageHTML, WebPagePDF
 import pdfkit
 from pathlib import Path
 import datetime
 import subprocess
+from abc import ABC, abstractmethod
 
-
-class Archiver:
+class Archiver(ABC):
     def __init__(self):
         pass
 
@@ -37,7 +37,7 @@ class Archiver:
         html_page = WebPageHTML(name, self.get_ctime(webpage_path), self.get_size(webpage_path), webpage_path)
         return html_page
 
-    def search_by_url(self, url, file_type, name):
+    def search_by_url(self, url, file_type, name, prefix):
         new_webpage = None
         if file_type == "HTML":
             new_webpage = self.download_html(name, url)
@@ -55,7 +55,7 @@ class Archiver:
         for first_page in search(topic, tld="com", num=1, stop=1, pause=2):
             return str(first_page)
 
-    def search_by_topic(self, topic, file_type, name):
+    def search_by_topic(self, topic, file_type, name, prefix):
         url = self.get_url_by_topic(topic)
         new_webpage = None
 
@@ -84,3 +84,4 @@ class Archiver:
         uncompress_warc.wait()
         uncompress_warc.poll()
         return destination
+B
