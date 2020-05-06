@@ -21,8 +21,8 @@ class Archiver:
 
     def download_html(self, name, url):
         warc_prefix = Path('/tmp')
-        wgetter = WgetWrapper()
-        wgetter.download_warc(name, warc_prefix, url)
+        wgetter = WgetWrapper(name, warc_prefix, url)
+        wgetter.download_warc()
         webpage_path = self.uncompress_warc(warc_prefix / (name + '.warc.gz'), name)
         ctime = webpage_path.stat().st_ctime
         webpage_datetime = datetime.datetime.fromtimestamp(ctime)
