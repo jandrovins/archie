@@ -10,8 +10,8 @@ class FileManager:
 
     @classmethod
     def persist_webpage(cls, name, abs_path, size, creation_date, page_type):
-        abs_path = str(webpage.path)
-        size = str(webpage.size)
+        abs_path = str(abs_path)
+        size = str(size)
         creation_date_str = creation_date.strftime("%Y-%m-%d")
         line = f"{name},{abs_path},{size},{creation_date_str},{page_type}\n"
         with cls.csv_path.open("a") as csv:

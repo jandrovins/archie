@@ -19,18 +19,15 @@ class ArchieView(Ui_Archie):
         self.archiver = Archiver()
         self.webpages = []
         self.populate_webpages_list()
-        print(self.webpages)
         self.populate_table()
 
     def populate_webpages_list(self):
         webpages_tuples = FileManager.parse_csv()
-        print('AAAA')
         for t in webpages_tuples:
             self.webpages.append(WebPage(t[0], t[1], t[2], t[3], t[4]))
 
     def populate_table(self):
         row_number = 0
-        print('BBBB')
         actual_row_number = self.saved_pages_table.rowCount()
         for webpage in self.webpages:
             if row_number >= actual_row_number:
@@ -40,7 +37,7 @@ class ArchieView(Ui_Archie):
             abs_path = str(webpage.path)
             size = str(webpage.size)
             creation_date_str = webpage.creation_date.strftime("%Y-%m-%d")
-            page_type = webpage.page_type
+            page_type = webpage.type
 
             self.saved_pages_table.setItem(
                 row_number, 0, QtWidgets.QTableWidgetItem(name)
@@ -68,12 +65,13 @@ class ArchieView(Ui_Archie):
         new_webpage = self.archiver.search_by_url(
             url, download_type, name, FileManager.directory
         )
+        self.webpages.append(new_webpage)
         FileManager.persist_webpage(
             new_webpage.name,
             new_webpage.path,
             new_webpage.size,
             new_webpage.creation_date,
-            new_webpage.page_type,
+            new_webpage.type,
         )
         self.populate_table()
 
@@ -83,14 +81,15 @@ class ArchieView(Ui_Archie):
         name = self.line_edit_topic_result_name.text()
         download_type = self.combo_box_topic.currentText()
         new_webpage = self.archiver.search_by_topic(
-            url, download_type, name, FileManager.directory
+            topic, download_type, name, FileManager.directory
         )
+        self.webpages.append(new_webpage)
         FileManager.persist_webpage(
             new_webpage.name,
             new_webpage.path,
             new_webpage.size,
             new_webpage.creation_date,
-            new_webpage.page_type,
+            new_webpage.type,
         )
         self.populate_table()
 
@@ -105,7 +104,9 @@ class ArchieView(Ui_Archie):
         if webpage == None:
             return
 
+        print('COMPRESSING')
         webpage.compress()
+        print('DONE')
 
 
 if __name__ == "__main__":
