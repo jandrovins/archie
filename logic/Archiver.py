@@ -10,13 +10,23 @@ class Archiver:
     def __init__(self):
         pass
 
-    def download_pdf(self, name, url):
-        pdfkit.from_url(url, "/home/vincent/Documents/Archie/PDF/%s"%name)
-        ctime = Path("/home/vincent/Documents/Archie/PDF/%s"%name).stat().st_ctime
-        webpage_datetime = datetime.datetime.fromtimestamp(ctime)
-        size = Path("/home/vincent/Documents/Archie/PDF/%s"%name).stat().st_size
+    #path is a Path pathlib object
+    def get_size(self, path):
+        size = path.stat().st_size
         size = size / 1048576
-        pdf_page = WebPagePDF(name, webpage_datetime.now().date(), size, Path("/home/vincent/Documents/Archie/PDF/%s"%name))
+        return size
+    
+    def get_ctime(self, path):
+        creation_time = path.stat().st_ctime
+        webpage_datetime = datetime.datetime.fromtimestamp(creation_time)
+        ctime = webpage_datetime.now().date()
+        return ctime
+
+    #prefix is a Path pathlib object
+    def download_pdf(self, prefix, name, url):
+        file_path = prefix/name
+        pdfkit.from_url(url, str(file_path))
+        pdf_page = WebPagePDF(name, self.get_ctime(file_path), self.get_size(file_path), file_path)
         return pdf_page
 
     def download_html(self, name, url):
@@ -24,11 +34,7 @@ class Archiver:
         wgetter = WgetWrapper()
         wgetter.download_warc(name, warc_prefix, url)
         webpage_path = self.uncompress_warc(warc_prefix / (name + '.warc.gz'), name)
-        ctime = webpage_path.stat().st_ctime
-        webpage_datetime = datetime.datetime.fromtimestamp(ctime)
-        size = webpage_path.stat().st_size
-        size = size / 1048576
-        html_page = WebPageHTML(name, webpage_datetime.now().date(), size, webpage_path)
+        html_page = WebPageHTML(name, self.get_ctime(webpage_path), self.get_size(webpage_path), webpage_path)
         return html_page
 
     def search_by_url(self, url, file_type, name):
@@ -36,7 +42,7 @@ class Archiver:
         if file_type == "HTML":
             new_webpage = self.download_html(name, url)
         elif file_type == "PDF":
-            new_webpage = self.download_pdf(name, url)
+            new_webpage = self.download_pdf(prefix, name, url)
         print(type(new_webpage))
         return new_webpage
 
@@ -56,7 +62,7 @@ class Archiver:
         if file_type == "HTML":
             new_webpage = self.download_html(name, url)
         elif file_type == "PDF":
-            new_webpage = self.download_pdf(name, url)
+            new_webpage = self.download_pdf(prefix, name, url)
         return new_webpage
 
     def uncompress_warc(self, path, name):
