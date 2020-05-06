@@ -1,13 +1,25 @@
 from pathlib import Path
-import shutil
+from shutil import make_archive
 
 
 class WebPage:
-    def __init__(self, name, creation_date, size, path):
+    def __init__(self, name, creation_date, size, path, page_type='UNKNOWN'):
         self.name = name
         self.creation_date = creation_date
         self.size = size
         self.path = path
+        self.type = page_type
+
+    def compress(self):
+        zip_file = str(Path.home() / "Downloads" / self.name)
+        if self.type == 'PDF':
+            p = '/'.join(str(self.path).split('/')[:-1])
+            print(p)
+            make_archive(zip_file, "zip", p)
+            return
+
+        make_archive(zip_file, "zip", self.path)
+        
 
 
 class WebPagePDF(WebPage):

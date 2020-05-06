@@ -7,26 +7,19 @@ from logic.WebPage import WebPageHTML, WebPagePDF
 class FileManager:
     directory = Path.home() / "Documents/Archie"
     csv_path = directory / "webpages.csv"
-    webpages = []
 
     @classmethod
-    def add_webpage(cls, webpage):
-        cls.webpages.append(webpage)
-        cls.add_webpage_to_csv(webpage)
-
-    @classmethod
-    def add_webpage_to_csv(cls, webpage):
-        name = webpage.name
-        abs_path = str(webpage.path)
-        size = str(webpage.size)
-        creation_date_str = webpage.creation_date.strftime("%Y-%m-%d")
-        page_type = webpage.type
+    def persist_webpage(cls, name, abs_path, size, creation_date, page_type):
+        abs_path = str(abs_path)
+        size = str(size)
+        creation_date_str = creation_date.strftime("%Y-%m-%d")
         line = f"{name},{abs_path},{size},{creation_date_str},{page_type}\n"
         with cls.csv_path.open("a") as csv:
             csv.write(line)
 
     @classmethod
     def parse_csv(cls):
+        webpages = []
         with cls.csv_path.open('r') as csv:
             # Iterate all lines, except header
             for line in csv.readlines()[1:]:
@@ -44,22 +37,7 @@ class FileManager:
                 day = int(creation_date_obj_list[2])
                 creation_date = date(year, month, day)
                 page_type = values[4]
-
-                # Create WebPage and add it to FileManager web pages list
-                if page_type == 'HTML':
-                    cls.webpages.append(
-                        WebPageHTML(name, creation_date, size, abs_path)
-                    )
-                else:
-                    cls.webpages.append(
-                        WebPagePDF(name, creation_date, size, abs_path)
-                    )
-
-    @classmethod
-    def list_web_pages(cls):
-        return cls.webpages
-
-    @classmethod
-    def compress(cls, webpage):
-        zip_file = str(Path.home() / "Downloads" / webpage.name)
-        make_archive(zip_file, "zip", webpage.path)
+                webpages.append(
+                        (name, creation_date, size, abs_path, page_type)
+                        )
+        return webpages
