@@ -1,7 +1,7 @@
 from pathlib import Path
 from shutil import make_archive
 from datetime import date
-from WebPage import WebPageHTML, WebPagePDF
+from logic.WebPage import WebPageHTML, WebPagePDF
 
 
 class FileManager:
