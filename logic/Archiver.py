@@ -1,5 +1,5 @@
-from WgetWrapper import WgetWrapper
-from WebPage import WebPage, WebPageHTML, WebPagePDF
+from logic.WgetWrapper import WgetWrapper
+from logic.WebPage import WebPage, WebPageHTML, WebPagePDF
 import pdfkit
 from pathlib import Path
 import datetime

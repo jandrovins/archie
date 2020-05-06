@@ -7,10 +7,10 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from WgetWrapper import WgetWrapper
-from FileManager import FileManager
-from Archiver import Archiver
-from WebPage import WebPage
+from persistence.FileManager import FileManager
+from logic.WgetWrapper import WgetWrapper
+from logic.Archiver import Archiver
+from logic.WebPage import WebPage
 
 
 class Ui_Archie(object):

@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
-from zipfile import ZipFile
 from pathlib import Path
-import os
 import shutil
 
 class WebPage(ABC):
