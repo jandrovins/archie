@@ -1,4 +1,4 @@
-fAOAAromA logic.WgetWrapper import WgetWrapper
+from logic.WgetWrapper import WgetWrapper
 from logic.WebPage import WebPage, WebPageHTML, WebPagePDF
 import pdfkit
 from pathlib import Path
@@ -84,4 +84,4 @@ class Archiver(ABC):
         uncompress_warc.wait()
         uncompress_warc.poll()
         return destination
-B
+

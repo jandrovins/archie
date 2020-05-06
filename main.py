@@ -192,22 +192,22 @@ class Ui_Archie(object):
 
             row_number += 1
 
-    def archive_by_url(self):
+    def archive_by_url(self, prefix):
         # Tomar URL ingresada por el usuario
         url = self.line_edit_url.text()
         name = self.line_edit_url_result_name.text()
         download_type = self.combo_box_url.currentText()
-        new_webpage = self.archiver.search_by_url(url, download_type, name)
+        new_webpage = self.archiver.search_by_url(url, download_type, name, prefix)
         print(type(new_webpage))
         FileManager.add_webpage(new_webpage)
         self.populate_table()
 
-    def archive_by_topic(self):
+    def archive_by_topic(self, prefix):
         # Tomar URL ingresada por el usuario
         topic = self.line_edit_topic.text()
         name = self.line_edit_topic_result_name.text()
         download_type = self.combo_box_topic.currentText()
-        new_webpage = self.archiver.search_by_topic(topic, download_type, name)
+        new_webpage = self.archiver.search_by_topic(topic, download_type, name, prefix)
         FileManager.add_webpage(new_webpage)
         self.populate_table()
 
