@@ -45,7 +45,6 @@ class Archiver(ABC):
             new_webpage = self.download_html(name, url)
         elif file_type == "PDF":
             new_webpage = self.download_pdf(prefix, name, url)
-        print(type(new_webpage))
         return new_webpage
 
     def get_url_by_topic(self, topic):

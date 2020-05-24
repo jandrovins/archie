@@ -14,7 +14,6 @@ class WebPage:
         zip_file = str(Path.home() / "Downloads" / self.name)
         if self.type == 'PDF':
             p = '/'.join(str(self.path).split('/')[:-1])
-            print(p)
             make_archive(zip_file, "zip", p)
             return
 

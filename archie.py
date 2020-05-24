@@ -104,9 +104,7 @@ class ArchieView(Ui_Archie):
         if webpage == None:
             return
 
-        print('COMPRESSING')
         webpage.compress()
-        print('DONE')
 
 
 if __name__ == "__main__":
