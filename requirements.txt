@@ -6,7 +6,7 @@ cffi==1.14.0
 chardet==3.0.4
 check-manifest==0.41
 coverage==5.1
-cryptography==2.9
+cryptography==3.2
 distlib==0.3.0
 django-bootstrap4==1.1.1
 docutils==0.16
