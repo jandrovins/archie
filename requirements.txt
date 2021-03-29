@@ -27,7 +27,7 @@ pkginfo==1.5.0.1
 pycodestyle==2.5.0
 pycparser==2.20
 pyflakes==2.1.1
-Pygments==2.6.1
+Pygments==2.7.4
 pyperf==2.0.0
 readme-renderer==25.0
 requests==2.23.0
